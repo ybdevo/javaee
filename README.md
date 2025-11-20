@@ -1,9 +1,9 @@
-# Java EE - Theory and Examples
+# Jakarta EE - Theory and Examples
 
 ![Java](https://img.shields.io/badge/Java-21-blue.svg)
-![Java EE](https://img.shields.io/badge/Java%20EE-8-lightgrey.svg)
+![Jakarta EE](https://img.shields.io/badge/Jakarta%20EE-9%2B-blue.svg)
 
-A collection of projects and examples to illustrate core concepts of Java Enterprise Edition (Java EE). This repository is structured as a multi-module project where each module focuses on a specific topic.
+A collection of projects and examples to illustrate core concepts of Jakarta Enterprise Edition (Jakarta EE). This repository is structured as a multi-module project where each module focuses on a specific topic.
 
 ---
 
@@ -21,7 +21,7 @@ The project is divided into several modules, each corresponding to a "Day" of le
 
 ## 🛠️ Technologies Used
 
-*   **Java Enterprise Edition (Java EE) 8**
+*   **Jakarta Enterprise Edition (Jakarta EE) 9+**
 *   **Java Servlet API**
 *   **Apache Tomcat** (or any other Java EE compatible web container)
 *   **IntelliJ IDEA** (as the IDE)

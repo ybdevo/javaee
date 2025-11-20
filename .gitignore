@@ -1,0 +1,26 @@
+# Build output
+/out/
+
+# IntelliJ IDEA
+.idea/
+
+# Maven
+target/
+
+# Gradle
+.gradle/
+build/
+
+# Compiled Java classes
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Temp files
+*.tmp

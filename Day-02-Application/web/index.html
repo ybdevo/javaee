@@ -3,33 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Input Form</title>
+    <title>Customer Management</title>
     <style>
-        /* Basic Dark Theme and Modern Styling */
+        :root {
+            --primary-accent: #61afef; /* Httpie-like blue accent */
+            --background-dark: #282c34; /* Deeper dark background */
+            --container-bg: #323842; /* Slightly lighter for containers */
+            --text-light: #abb2bf;
+            --input-bg: #3a3f4b;
+            --border-color: #444a54;
+            --success-color: #98c379;
+            --warning-color: #e5c07b;
+            --error-color: #e06c75;
+        }
+
         body {
-            background-color: #1e1e1e; /* Dark background */
-            color: #f0f0f0; /* Light text */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .form-container {
-            background-color: #2d2d2d; /* Slightly lighter dark for container */
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Modern shadow */
+            background-color: var(--container-bg);
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
+            border: 1px solid var(--border-color);
+            transform: translateY(0);
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        }
+
+        .form-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
         }
 
         h2 {
             text-align: center;
             margin-bottom: 30px;
-            color: #4CAF50; /* Accent color for title */
+            color: var(--primary-accent);
+            font-size: 1.8em;
+            font-weight: 700;
         }
 
         .form-group {
@@ -39,75 +62,154 @@
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #cccccc;
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 0.95em;
         }
 
         input[type="text"],
         input[type="number"],
         textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #444444; /* Darker border */
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             box-sizing: border-box;
-            background-color: #3a3a3a; /* Dark input background */
-            color: #f0f0f0; /* Light input text */
-            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
         }
 
         input:focus,
         textarea:focus {
-            border-color: #4CAF50; /* Accent color on focus */
+            border-color: var(--primary-accent);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Subtle focus glow */
+            background-color: #434958;
+            box-shadow: 0 0 0 3px rgba(97, 175, 239, 0.25);
         }
 
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         button {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50; /* Primary button color (green) */
-            color: white;
+            flex: 1;
+            padding: 12px 18px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 700;
-            transition: background-color 0.3s, transform 0.1s;
+            font-size: 1em;
+            font-weight: 600;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+            min-width: 120px; /* Ensure buttons don't get too small */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         button:hover {
-            background-color: #45a049; /* Darker green on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         button:active {
-            transform: scale(0.99);
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Specific button styling */
+        #submitButton {
+            background-color: var(--primary-accent); /* Blue for submit */
+        }
+        #submitButton:hover {
+            background-color: #4b92d2;
+        }
+
+        #updateButton {
+            background-color: var(--warning-color); /* Yellow for update */
+        }
+        #updateButton:hover {
+            background-color: #d8b26e;
+        }
+
+        #getButton {
+            background-color: var(--success-color); /* Green for get */
+        }
+        #getButton:hover {
+            background-color: #8ac06b;
+        }
+
+        #deleteButton {
+            background-color: var(--error-color); /* Red for delete */
+        }
+        #deleteButton:hover {
+            background-color: #cc5f67;
+        }
+
+        .response-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .response-section h4 {
+            color: var(--primary-accent);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .response-section p {
+            background-color: #1a1d23;
+            border: 1px solid #323842;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Fira Code', 'Lucida Console', Monaco, monospace;
+            font-size: 0.9em;
+            color: #c6c6c6;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="form-container">
-    <h2>User Information</h2>
-    <label for="id">ID</label>
-    <input type="number" id="id" name="id" required>
+    <h2>Customer Management</h2>
+    <div class="form-group">
+        <label for="id">ID</label>
+        <input type="number" id="id" name="id" required>
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" name="address" required></textarea>
+    </div>
 
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" required>
+    <div class="button-group">
+        <button id="submitButton">Submit</button>
+        <button id="updateButton">Update</button>
+        <button id="getButton">Get</button>
+        <button id="deleteButton">Delete</button>
+    </div>
 
-    <label for="address">Address</label>
-    <textarea id="address" name="address" required></textarea>
-
-    <h4>Response</h4>
-    <p>Response</p>
-
-    <button type="submit">Submit</button>
-    <button id="delete">Delete</button>
+    <div class="response-section">
+        <h4>Server Response</h4>
+        <p id="response-output">No response yet.</p>
+    </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>

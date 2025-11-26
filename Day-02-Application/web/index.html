@@ -5,11 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #00ff7f; /* SpringGreen */
+            --text-color: #ffffff;
+            --border-color: #333;
+            --input-bg-color: #252525;
+            --input-border-color: #444;
+            --label-color: #888;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,20 +31,42 @@
             box-sizing: border-box;
         }
 
-        .container {
-            background-color: #1e1e1e;
+        .main-layout {
+            display: flex;
+            gap: 2rem;
+            background-color: var(--surface-color);
             padding: 2.5rem;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 500px;
-            border: 1px solid #333;
+            max-width: 1000px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .response-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         h1 {
             text-align: center;
-            color: #ffffff;
+            color: var(--text-color);
             margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        
+        .response-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            text-align: center;
             font-weight: 600;
         }
 
@@ -48,7 +82,7 @@
             transform: translateY(-50%);
             background: transparent;
             padding: 0 0.25rem;
-            color: #888;
+            color: var(--label-color);
             font-size: 1rem;
             transition: all 0.3s ease;
             pointer-events: none;
@@ -56,153 +90,150 @@
 
         .form-group input:not([type="submit"]):focus + label,
         .form-group textarea:focus + label,
-        .form-group input:not([type="submit"]):valid + label,
-        .form-group textarea:valid + label {
+        .form-group input:not([type="submit"]):not(:placeholder-shown) + label,
+        .form-group textarea:not(:placeholder-shown) + label {
             top: 0;
             left: 0.75rem;
             font-size: 0.8rem;
-            color: #00ff7f; /* SpringGreen */
-            background-color: #1e1e1e;
+            color: var(--primary-color);
+            background-color: var(--surface-color);
         }
 
         .form-group input:not([type="submit"]),
         .form-group textarea {
             width: 100%;
             padding: 1rem;
-            border: 2px solid #444;
+            border: 2px solid var(--input-border-color);
             border-radius: 8px;
             font-size: 1rem;
-            background-color: #252525;
-            color: #ffffff;
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
             transition: border-color 0.3s;
             box-sizing: border-box;
+            /* Use placeholder to trigger :not(:placeholder-shown) */
+            placeholder: " "; 
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
         .form-group input:not([type="submit"]):focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #00ff7f; /* SpringGreen */
+            border-color: var(--primary-color);
         }
 
         .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: auto; /* Pushes buttons to the bottom */
+            padding-top: 1.5rem;
+        }
+        
+        .button-group .delete {
+             --button-color: #ff4d4d;
+             --button-shadow: rgba(255, 77, 77, 0.2);
+             --button-hover: #ff3333;
+             --button-shadow-hover: rgba(255, 77, 77, 0.3);
+        }
+        
+        .button-group .update {
+             --button-color: #4d94ff;
+             --button-shadow: rgba(77, 148, 255, 0.2);
+             --button-hover: #3385ff;
+             --button-shadow-hover: rgba(77, 148, 255, 0.3);
+        }
+        
+        .button-group .submit {
+             --button-color: #00ff7f; /* SpringGreen */
+             --button-shadow: rgba(0, 255, 127, 0.2);
+             --button-hover: #00e673;
+             --button-shadow-hover: rgba(0, 255, 127, 0.3);
         }
 
         .button-group button {
-            flex: 1;
-            min-width: 120px;
+            width: 100%;
             padding: 1rem;
-            background-color: #00ff7f; /* SpringGreen */
-            color: #121212;
+            background-color: var(--button-color);
+            color: var(--bg-color);
             border: none;
             border-radius: 8px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 255, 127, 0.2);
+            box-shadow: 0 4px 15px var(--button-shadow);
         }
 
         .button-group button:hover {
-            background-color: #00e673;
+            background-color: var(--button-hover);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 255, 127, 0.3);
+            box-shadow: 0 6px 20px var(--button-shadow-hover);
         }
 
-        .response-section {
-            margin-top: 2rem;
-            border-top: 1px solid #333;
-            padding-top: 1.5rem;
-        }
-
-        .response-section h4 {
-            color: #00ff7f;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            text-align: center;
-        }
-
-        .response-section #response-output {
-            background-color: #252525;
-            border: 1px solid #444;
+        #response-output {
+            background-color: var(--input-bg-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 1rem;
-            min-height: 80px;
+            padding: 1.5rem;
+            height: 100%;
             white-space: pre-wrap;
-            word-break: break-all;
+            word-break: break-word;
             font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
             font-size: 0.9em;
-            color: #ffffff;
+            color: var(--text-color);
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            transition: all 0.3s ease;
         }
+        
+        #response-output:before {
+            content: '>';
+            margin-right: 0.5em;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 800px) {
+            .main-layout {
+                flex-direction: column;
+                padding: 1.5rem;
+            }
+        }
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Customer Management</h1>
-    <div class="form-group">
-        <input type="number" id="id" name="id" required>
-        <label for="id">ID</label>
-    </div>
-    <div class="form-group">
-        <input type="text" id="name" name="name" required>
-        <label for="name">Name</label>
-    </div>
-    <div class="form-group">
-        <textarea id="address" name="address" rows="3" required></textarea>
-        <label for="address">Address</label>
-    </div>
+<div class="main-layout">
+    <div class="form-container">
+        <h1>Customer Management</h1>
+        <div class="form-group">
+            <input type="number" id="id" name="id" placeholder=" " required>
+            <label for="id">ID</label>
+        </div>
+        <div class="form-group">
+            <input type="text" id="name" name="name" placeholder=" " required>
+            <label for="name">Name</label>
+        </div>
+        <div class="form-group">
+            <textarea id="address" name="address" rows="3" placeholder=" " required></textarea>
+            <label for="address">Address</label>
+        </div>
 
-    <div class="button-group">
-        <button id="submitButton">Submit</button>
-        <button id="updateButton">Update</button>
-        <button id="getButton">Get</button>
-        <button id="deleteButton">Delete</button>
+        <div class="button-group">
+            <button id="submitButton" class="submit">Submit</button>
+            <button id="updateButton" class="update">Update</button>
+            <button id="deleteButton" class="delete">Delete</button>
+        </div>
     </div>
-
-    <div class="response-section">
-        <h4>Server Response</h4>
-        <p id="response-output">No response yet.</p>
+    <div class="response-container">
+        <h2>Server Response</h2>
+        <div id="response-output">No response yet.</div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
 
-    $(document).on('click', 'button', function () {
-        let id = $('#id').val();
-        let name = $('#name').val();
-        let address = $('#address').val();
-        $.ajax({
-            url: `http://localhost:8080/Day_02_Application_war_exploded/customer?id=${id}&name=${name}&address=${address}`,
-            method: "POST",
-            success: function (responseText) {
-                console.log("Success" + responseText);
-            },
-            error: function () {
-                console.log("Eya eka wath wada na - POST");
-            },
-        });
-
-        setTimeout(() => {
-            $.ajax({
-                url: `http://localhost:8080/Day_02_Application_war_exploded/customer`,
-                method: "GET",
-                success: function (responseText) {
-                    console.log("Success" + responseText);
-                    $('#response-output').text("\n"+ responseText);
-                },
-                error: function () {
-                    console.log("Eya eka wath wada na - GET");
-                },
-            });
-        }, 100);
-
-    })
-
-</script>
 </body>
 </html>

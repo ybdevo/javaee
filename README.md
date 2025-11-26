@@ -1,7 +1,6 @@
 # Jakarta EE - Theory and Examples
 
 ![Java](https://img.shields.io/badge/Java-21-blue.svg)
-![Jakarta EE](https://img.shields.io/badge/Jakarta%20EE-9%2B-blue.svg)
 
 A collection of projects and examples to illustrate core concepts of Jakarta Enterprise Edition (Jakarta EE). This repository is structured as a multi-module project where each module focuses on a specific topic.
 

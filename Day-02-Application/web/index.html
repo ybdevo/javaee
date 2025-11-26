@@ -293,52 +293,103 @@
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>$(".button-group").on('click', 'button', function () {
-    let id = $('#id').val();
-    let name = $('#name').val();
-    let address = $('#address').val();
-    $.ajax({
-        url: `http://localhost:8080/Day_02_Application_war_exploded/customer?id=${id}&name=${name}&address=${address}`,
-        method: 'POST',
-        success: function (respTxt) {
-            console.log("Success" + respTxt);
-        },
-        error: function (respTxt) {
-            console.log("Failed" + respTxt);
+<script>
+    function clearInputFields() {
+        $('#id').val('');
+        $('#name').val('');
+        $('#address').val('');
+    }
+
+    function getList() {
+        setTimeout(() => {
+            $.ajax({
+                url: `http://localhost:8080/Day_02_Application_war_exploded/customer`,
+                method: 'GET',
+                success: function (respTxt) {
+                    console.log(respTxt);
+                    respTxt = respTxt.replace("[", "").replace("]", "");
+                    console.log(respTxt);
+                    let rows = respTxt.split("Customer").filter((r) => r.trim() !== "");
+                    console.log(rows);
+
+                    $('#customer-table-body').empty();
+
+                    rows.forEach((row, index) => {
+                        let id = row.split("id='")[1]?.split("'")[0];
+                        let name = row.split("name='")[1]?.split("'")[0];
+                        let addr = row.split("address='")[1]?.split("'")[0];
+
+                        $('#customer-table-body').append(
+                            `<tr data-index="${index}">
+                                <td>${id}</td>
+                                <td>${name}</td>
+                                <td>${addr}</td>
+                             </tr>`
+                        )
+                    })
+                    clearInputFields();
+                },
+                error: function (respTxt) {
+                    console.log("Error", respTxt);
+                },
+            })
+        }, 100);
+    }
+
+    $(".button-group").on('click', 'button', function () {
+        let id = $('#id').val();
+        let name = $('#name').val();
+        let address = $('#address').val();
+
+        if ($(this).hasClass('submit')) {
+            $.ajax({
+                url: `http://localhost:8080/Day_02_Application_war_exploded/customer?id=${id}&name=${name}&address=${address}`,
+                method: 'POST',
+                success: function (respTxt) {
+                    console.log("Success" + respTxt);
+                },
+                error: function (respTxt) {
+                    console.log("Failed" + respTxt);
+                }
+            });
+            getList();
+        } else if ($(this).hasClass('update')) {
+            $.ajax({
+                url: `http://localhost:8080/Day_02_Application_war_exploded/customer?id=${id}&name=${name}&address=${address}`,
+                method: 'PUT',
+                success: function (respTxt) {
+                    console.log("Update Success" + respTxt);
+                    clearInputFields();
+                },
+                error: function (respTxt) {
+                    console.log("Update Failed" + respTxt);
+                }
+            });
+            getList();
+        } else if ($(this).hasClass('delete')) {
+            $.ajax({
+                url: `http://localhost:8080/Day_02_Application_war_exploded/customer?id=${id}`,
+                method: 'DELETE',
+                success: function (respTxt) {
+                    console.log("Delete Success" + respTxt);
+                    clearInputFields();
+                },
+                error: function (respTxt) {
+                    console.log("Delete Failed" + respTxt);
+                }
+            });
+            getList();
         }
     });
-    setTimeout(() => {
-        $.ajax({
-            url: `http://localhost:8080/Day_02_Application_war_exploded/customer`,
-            method: 'GET',
-            success: function (respTxt) {
-                console.log(respTxt);
-                respTxt = respTxt.replace("[", "").replace("]", "");
-                console.log(respTxt);
-                let rows  = respTxt.split("Customer").filter((r) => r.trim() !== "");
-                console.log(rows);
+    $('#customer-table-body').on('click', 'tr', function () {
+        let id = $(this).find('td:eq(0)').text();
+        let name = $(this).find('td:eq(1)').text();
+        let address = $(this).find('td:eq(2)').text();
 
-                $('#customer-table-body').empty();
-
-                rows.forEach(row => {
-                    let id = row.split("id='")[1]?.split("'")[0];
-                    let name = row.split("name='")[1]?.split("'")[0];
-                    let addr = row.split("address='")[1]?.split("'")[0];
-
-                    $('#customer-table-body').append(
-                        `<tr>
-                            <td>${id}</td>
-                            <td>${name}</td>
-                            <td>${addr}</td>
-                         </tr>`
-                    )
-                })
-            },
-            error: function (respTxt) {
-                console.log("Error", respTxt);
-            },
-        })
-    }, 100);
-});</script>
+        $('#id').val(id);
+        $('#name').val(name);
+        $('#address').val(address);
+    })
+</script>
 </body>
 </html>

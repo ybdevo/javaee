@@ -30,5 +30,29 @@ public class CustomerServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         out.println(customerList);
     }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        String name = req.getParameter("name");
+        String address = req.getParameter("address");
+
+        customerList.forEach(customer -> {
+            if (customer.getId().equals(id)) {
+                customer.setName(name);
+                customer.setAddress(address);
+            }
+        });
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        customerList.forEach(customer -> {
+            if (customer.getId().equals(id)) {
+                customerList.remove(customer);
+            }
+        });
+    }
 }
 

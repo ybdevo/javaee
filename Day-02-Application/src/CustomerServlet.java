@@ -6,6 +6,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,23 @@ public class CustomerServlet extends HttpServlet {
         String name = req.getParameter("name");
         String address = req.getParameter("address");
 
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaeeapp", "root", "root");
+            String query = "INSERT INTO customer (id, name, address) VALUES(?,?,?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, address);
+            if (preparedStatement.executeUpdate() > 0) {
+                resp.getWriter().println("Customer Added Successfully");
+            } else {
+                resp.getWriter().println("Customer Not Added");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         customerList.add(new Customer(id, name, address));
         customerList.forEach((customer) -> {
             System.out.println(customer.toString());
@@ -28,6 +49,21 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaeeapp", "root", "root");
+            String query = "SELECT * FROM customer";
+            ResultSet resultSet = connection.createStatement().executeQuery(query);
+            while (resultSet.next()) {
+                String id = resultSet.getString("id");
+                String name = resultSet.getString("name");
+                String addr = resultSet.getString("address");
+
+                out.println(new Customer(id, name, addr));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         out.println(customerList);
     }
 

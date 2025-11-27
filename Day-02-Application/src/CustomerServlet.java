@@ -64,7 +64,6 @@ public class CustomerServlet extends HttpServlet {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        out.println(customerList);
     }
 
     @Override
@@ -73,22 +72,41 @@ public class CustomerServlet extends HttpServlet {
         String name = req.getParameter("name");
         String address = req.getParameter("address");
 
-        customerList.forEach(customer -> {
-            if (customer.getId().equals(id)) {
-                customer.setName(name);
-                customer.setAddress(address);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaeeapp", "root", "root");
+            String query = "UPDATE customer SET name=?, address=? WHERE id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, address);
+            preparedStatement.setString(3, id);
+            if (preparedStatement.executeUpdate() > 0) {
+                resp.getWriter().println("Customer Update Successfully");
+            } else {
+                resp.getWriter().println("Customer Not Updates");
             }
-        });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        customerList.forEach(customer -> {
-            if (customer.getId().equals(id)) {
-                customerList.remove(customer);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaeeapp", "root", "root");
+            String query = "DELETE FROM customer WHERE id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, id);
+            if (preparedStatement.executeUpdate() > 0) {
+                resp.getWriter().println("Customer Deleted Successfully");
+            } else {
+                resp.getWriter().println("Customer Not Deleted");
             }
-        });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
